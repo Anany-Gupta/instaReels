@@ -23,7 +23,6 @@ const Login = (props) => {
   let { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
-    //   email , password
     try {
       await login(email, password);
       props.history.push("/"); //navigate to /
@@ -41,7 +40,8 @@ const Login = (props) => {
       justifyContent: "center",
       width: "100vw",
     },
-    carousal: { height: "10rem", backgroundColor: "lightgray" },
+    carousal: { height: "30rem", backgroundColor: "lightgray" ,width:"20rem" },
+    loginTemplate: { height: "33rem" ,width:"30rem" },
     fullWidth: {
       width: "100%",
     },
@@ -64,13 +64,13 @@ const Login = (props) => {
 
   return (
     <div>
-      <Container>
-        <Grid container spacing={2} style={{justifyContent:"space-around"}}>
+      <Container style={{height: '100vh',display:'flex' ,alignItems:'center' }}>
+        <Grid container spacing={2} style={{justifyContent:"space-around",alignItems:"center" }}>
           {/* Carousel */}
           <Grid item sm={5}>
             <Paper className={classes.carousal}>Carousel</Paper>
           </Grid>
-          <Grid item sm={3}>
+          <Grid item className={classes.loginTemplate}>
             <Card variant="outlined" className={classes.mb}>
               <CardMedia
                 image={logo}
@@ -109,13 +109,11 @@ const Login = (props) => {
             </Card>
             <Card variant="outlined" className={classes.padding}>
               <Typography style={{ textAlign: "center" }}>
-                Don't have an account ?
-                <Button variant="contained" color="primary">
-                  <Link style={{ color: "white" }} to="/signup">
-                    SignUp
+                Don't have an account?  <></>     
+                  <Link style={{ textDecoration: "none" }} to="/signup">
+                   SignUp
                   </Link>
-                </Button>
-              </Typography>
+               </Typography>
             </Card>
           </Grid>
         </Grid>

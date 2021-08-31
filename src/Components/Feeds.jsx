@@ -5,30 +5,20 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import { firebaseDB, firebaseStorage, timeStamp } from "../config/firebase";
 import { uuid } from "uuidv4";
 import VideoPost from "./VideoPost";
-
-
 const Feeds = (props) => {
-  const { signOut } = useContext(AuthContext);
   const [videoFile, setVideoFile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [uploadVideoError, setUploadVideoError] = useState("");
   const { currentUser } = useContext(AuthContext);
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      props.history.push("/login");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   const handleInputFile = (e) => {
     let file = e.target.files[0];
     setVideoFile(file);
   };
   const handleUploadFile = async () => {
     try {
-      if (videoFile.size / 1000000 > 35) {
-        setUploadVideoError("Selected File Exceeds 35MB cannot upload !");
+      if (videoFile.size / 1000000 > 50) {
+        setUploadVideoError("Selected File Exceeds 50MB cannot upload !");
         return;
       }
 
@@ -37,19 +27,19 @@ const Feeds = (props) => {
       const uploadVideoObject = firebaseStorage
         .ref(`/profilePhotos/${uid}/${Date.now()}.mp4`)
         .put(videoFile);
-      uploadVideoObject.on("state_changed", fun1, fun2, fun3);
-      function fun1(snapshot) {
+      uploadVideoObject.on("state_changed", progressFunction, errorFunction, resultFunction);
+      function progressFunction(snapshot) {
         // bytes transferred
         // totoal bytes
         let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log(progress);
       }
       // if indicates a error !!
-      function fun2(error) {
+      function errorFunction(error) {
         console.log(error);
       }
       // it indicates success of the upload !!
-      async function fun3() {
+      async function resultFunction() {
         let videoUrl = await uploadVideoObject.snapshot.ref.getDownloadURL();
         console.log(videoUrl);
         let pid = uuid(); // unique id
@@ -66,12 +56,14 @@ const Feeds = (props) => {
         document.postsCreated.push(pid);
         await firebaseDB.collection("users").doc(uid).set(document);
         setUploadVideoError("");
+        setVideoFile(null);
+
       }
     } catch (err) {}
   };
 
   let conditionObject = {
-    root: null,
+    root: null, //observe from whole page
     threshold: "0.8", //80%
   };
 
@@ -79,6 +71,8 @@ const Feeds = (props) => {
     console.log(entries);
     entries.forEach((entry) => {
       let child = entry.target.children[0];
+      // play(); => async
+      // pause(); => sync
 
       child.play().then(function () {
         if (entry.isIntersecting == false) {
@@ -99,6 +93,9 @@ const Feeds = (props) => {
   }, [posts]);
 
   useEffect(() => {
+    //GET ALL THE POSTS
+
+    //onSnapshot => listens for changes on the collection
     firebaseDB
       .collection("posts")
       .orderBy("createdAt", "desc")
@@ -111,9 +108,9 @@ const Feeds = (props) => {
   }, []); //component did mount !!
 
   return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
-      <div className="uploadVideo">
+    <div style={{position:"relative"}}>
+      
+      <div style={{position:'fixed',top:'10rem',right:'1rem',display:'flex',flexDirection:'column'}}>
         <div>
           <input type="file" onChange={handleInputFile} />
           <label>

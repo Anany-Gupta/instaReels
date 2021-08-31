@@ -1,41 +1,50 @@
 import React, { useContext, useEffect, useState } from "react";
-import { firebaseDB, timeStamp } from "../config/firebase";
-import ReactDOM from "react-dom";
+import { firebaseDB } from "../config/firebase";
+
 import { AuthContext } from "../AuthProvider";
+import './VideoPost.css';
 import {
   Card,
-  CardHeader,
-  CardActions,
-  CardContent,
-  CardMedia,
   Button,
   makeStyles,
   Typography,
   TextField,
-  Avatar,
   Container,
 } from "@material-ui/core";
-import { Favorite, FavoriteBorder } from "@material-ui/icons";
+import { Favorite, FavoriteBorder,VolumeUp,VolumeOff } from "@material-ui/icons";
+import CommentIcon from '@material-ui/icons/Comment';
 
 const VideoPost = (props) => {
+  let [hide,setHide]=useState(true);
   let [user, setUser] = useState(null);
   let [comment, setComment] = useState("");
   let [commentList, setCommentList] = useState([]);
   let [likesCount, setLikesCount] = useState(null);
   let [isLiked, setIsLiked] = useState(false);
   let { currentUser } = useContext(AuthContext);
+  let [mute,setMute]=useState(false);
   // { comment , profilePhotoUrl }
 
   const useStyles = makeStyles({
     videoContainerSize: {
-      height: "50%",
+      height: "50vw%",
     },
+    post:{
+        width:'45vw',
+        padding:'1rem',
+    },
+    avatar: {
+      height: '30px',
+      width: '30px',
+      border: '1px solid black',
+      borderRadius: '50%',
+      marginRight: '5px',
+    }
   });
   let classes = useStyles();
 
   const addCommentToCommentList = async (e) => {
     let profilePic;
-    // when commenting user and post author user is same
     if (currentUser.uid == user.userId) {
       profilePic = user.profileImageUrl;
     } else {
@@ -60,30 +69,28 @@ const VideoPost = (props) => {
     setComment("");
   };
 
-  const toggleLikeIcon = async () =>{
-    if(isLiked){
+  const toggleLikeIcon = async () => {
+    if (isLiked) {
       let postDoc = props.postObj;
-      let filteredLikes = postDoc.likes.filter( uid =>{
-        if(uid == currentUser.uid){
+      let filteredLikes = postDoc.likes.filter((uid) => {
+        if (uid == currentUser.uid) {
           return false;
-        }
-        else{
+        } else {
           return true;
         }
       });
       postDoc.likes = filteredLikes;
       await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
       setIsLiked(false);
-      likesCount == 1 ? setLikesCount(null) : setLikesCount(likesCount-1);
-    }
-    else{
+      likesCount == 1 ? setLikesCount(null) : setLikesCount(likesCount - 1);
+    } else {
       let postDoc = props.postObj;
       postDoc.likes.push(currentUser.uid);
       await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
       setIsLiked(true);
-      likesCount == null ? setLikesCount(1) : setLikesCount(likesCount+1);
+      likesCount == null ? setLikesCount(1) : setLikesCount(likesCount + 1);
     }
-  }
+  };
 
   useEffect(async () => {
     console.log(props);
@@ -92,14 +99,17 @@ const VideoPost = (props) => {
     let user = doc.data();
     let commentList = props.postObj.comments;
     let likes = props.postObj.likes;
+
     let updatedCommentList = [];
 
     for (let i = 0; i < commentList.length; i++) {
       let commentObj = commentList[i];
       let doc = await firebaseDB.collection("users").doc(commentObj.uid).get();
       let commentUserPic = doc.data().profileImageUrl;
+      let commentUserName = doc.data().username;
       updatedCommentList.push({
         profilePic: commentUserPic,
+        username:commentUserName,
         comment: commentObj.comment,
       });
     }
@@ -116,86 +126,94 @@ const VideoPost = (props) => {
     console.log(updatedCommentList);
     setUser(user);
     setCommentList(updatedCommentList);
-  }, []); 
+  }, []); //comp did Mount
 
   return (
-    <Container>
-      <Card
-        style={{
-          width: "300px",
-          margin: "auto",
-          padding: "10px",
-          marginBottom: "20px",
-        }}
-      >
-        <Avatar src={user ? user.profileImageUrl : ""}/>
-        <Typography variant="span">{user ? user.username : ""}</Typography>
+    <Container className={classes.post}>
+      <Card className="video-card" style={{height:'80vh',width:'30vw',margin:'auto'}}>
+        <img className={classes.avatar}
+         src={ user?user.profileImageUrl :""} />
+        <Typography variant="span"><strong>{user?user.username:"" }</strong></Typography>
         <div className="video-container">
-          <Video
+          <Video style={{height: '100%', width: '100%',objectFit:'contain'}}
             className={classes.videoContainerSize}
             src={props.postObj.videoLink}
-          ></Video>
+            mute={mute}
+          />
         </div>
-        <div>
+        <div className="tools">
           {isLiked ? (
             <Favorite
               onClick={() => toggleLikeIcon()}
               style={{ color: "red" }}
-            ></Favorite>
+            />
           ) : (
             <FavoriteBorder onClick={() => toggleLikeIcon()}></FavoriteBorder>
           )}
+            <CommentIcon onClick={()=>{
+                setHide(!hide);
+            }}/>
+            {mute? <VolumeOff onClick={()=>{setMute(false)}}/>:<VolumeUp onClick={()=>{setMute(true)}}/>}
         </div>
 
         {likesCount && (
-          <div>
+          <div style={{marginBottom:'5px'}}>
             <Typography variant="p">Liked by {likesCount} others </Typography>
           </div>
         )}
-        <Typography variant="p">Comments</Typography>
-        <TextField
-          variant="outlined"
-          label="Add a comment"
-          size="small"
-          value={comment}
-          onChange={(e) => {
-            setComment(e.target.value);
-          }}
-        ></TextField>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={addCommentToCommentList}
-        >
-          Post
-        </Button>
+        <div className={hide? "comments-div hide":" comments-div "}>
+          <Typography variant="p">Comments</Typography>
+          <TextField  
+            variant="outlined"
+            label="Add a comment"
+            size="small"
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={addCommentToCommentList}
+          >
+            Post
+          </Button>
+         <div className="comment-list" >
 
-        {commentList.map((commentObj) => {
-          return (
-            <>
-              <Avatar src={commentObj.profilePic}></Avatar>
-              <Typography variant="p">{commentObj.comment}</Typography>
-            </>
-          );
+          {commentList.map((commentObj) => {
+              return (
+                <div className="comment">
+                    <img className={classes.avatar}
+                    src={commentObj.profilePic}/>
+                    <strong>{commentObj.username}</strong><br/>
+                    <Typography variant="p">{commentObj.comment} </Typography>
+              </div>
+            );
         })}
+        </div>
+        </div>
       </Card>
     </Container>
   );
 };
 
-function Video(props) {
-  const handleAutoScroll = (e) => {
-  };
+let Video=(props) =>{
+  let [pause,setPause] = useState(false);
+
   return (
     <video
+        autoPlay
+        loop
       style={{
-        height: " 100%",
+        height: "100%",
         width: "100%",
       }}
-      muted={true}
-      onEnded={handleAutoScroll}
-      onClick={(e) => {
-        console.log(timeStamp());
+      mute={props.mute}
+      onClick={(e)=>{
+        if(pause) e.target.play();
+        else e.target.pause();
+        setPause(!pause);
       }}
     >
       <source src={props.src} type="video/mp4"></source>

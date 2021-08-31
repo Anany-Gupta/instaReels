@@ -1,0 +1,35 @@
+.avatar {
+  height: 30px;
+  width: 30px;
+  border: 1px solid black;
+  border-radius: 50%;
+  margin-right: .5rem;
+}
+.comment {
+  /* border: 1px grey solid;
+    border-radius: 15px; */
+  padding: .5rem;
+}
+.tools > * {
+  margin: 1rem;
+  cursor: pointer;
+}
+.hide {
+  display: none;
+  margin-bottom: 0.5rem;
+}
+.video-container {
+  height: 76%;
+  width: 100%;
+}
+.video-card{
+    position:relative
+}
+.comment-list{
+    height: 81%;
+    width: 100%;
+    background-color: white;
+    position:absolute;
+    top:0;
+
+}

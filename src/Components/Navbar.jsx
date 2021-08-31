@@ -1,48 +1,75 @@
-import { Link } from "react-router-dom";
-let Navbar = () => {
+import React, { useContext, useEffect, useState } from "react";
+
+import { AuthContext } from "../AuthProvider";
+import logo from "../logo.png";
+
+import { firebaseDB, firebaseStorage, timeStamp } from "../config/firebase";
+import { CardMedia, Button, IconButton, makeStyles } from "@material-ui/core";
+import {
+  HomeRounded,
+  AccountCircle,
+  ExitToApp,
+  PhotoCamera,
+} from "@material-ui/icons";
+import CommentIcon from "@material-ui/icons/Comment";
+
+const Navbar = (props) => {
+  const { signOut,currentUser  } = useContext(AuthContext);
+ 
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      props.history.push("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  let useStyles = makeStyles({
+    logo: {
+      height: "4rem",
+      backgroundSize: "contain",
+      width: "20%",
+    },
+    Nav: {
+      height: "5rem",
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      position:'sticky',
+    },
+    tools: {
+      width: "20%",
+      fontSize: "1rem",
+    },
+  });
+  let classes = useStyles();
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
-        <a className="navbar-brand" to="/">
-          Instagram
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="/navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+    <div className={classes.Nav}>
+      <CardMedia className={classes.logo} image={logo}></CardMedia>
+      
+      <div className={classes.tools}>
+        <IconButton>
+          <HomeRounded />
+        </IconButton>
+        <IconButton>
+          <AccountCircle />
+        </IconButton>
+
+        <Button
+          onClick={handleLogout}
+          variant="contained"
+          color="default"
+          startIcon={<ExitToApp />}
         >
-        <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">
-                Login
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/signup">
-                SignUp
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/Profile">
-                Profile
-              </Link>
-            </li>
-          </ul>
-        </div>
+          Logout
+        </Button>
+        
       </div>
-    </nav>
+    </div>
   );
 };
+
 export default Navbar;
+<h1>Header</h1>;
