@@ -19,7 +19,6 @@ import {
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   let { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
@@ -27,9 +26,7 @@ const Login = (props) => {
       await login(email, password);
       props.history.push("/"); //navigate to /
     } catch (err) {
-      setMessage(err.message);
-      setEmail("");
-      setPassword("");
+      console.log(err.message);
     }
   };
 

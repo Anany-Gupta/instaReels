@@ -23,7 +23,7 @@ const Signup = (props) => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [message, setMessage] = useState("");
+ 
   const { signUp } = useContext(AuthContext);
 
   const handleFileSubmit = (event) => {
@@ -59,7 +59,7 @@ const Signup = (props) => {
         }
       );
     } catch (err) {
-      setMessage(err.message);
+      console.log(err.message);
       setEmail("");
       setPassword("");
     }

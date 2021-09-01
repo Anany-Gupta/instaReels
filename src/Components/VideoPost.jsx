@@ -53,7 +53,7 @@ const VideoPost = (props) => {
 
   const addCommentToCommentList = async (e) => {
     let profilePic;
-    if (currentUser.uid == user.userId) {
+    if (currentUser.uid === user.userId) {
       profilePic = user.profileImageUrl;
     } else {
       let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
@@ -81,7 +81,7 @@ const VideoPost = (props) => {
     if (isLiked) {
       let postDoc = props.postObj;
       let filteredLikes = postDoc.likes.filter((uid) => {
-        if (uid == currentUser.uid) {
+        if (uid === currentUser.uid) {
           return false;
         } else {
           return true;
@@ -90,17 +90,18 @@ const VideoPost = (props) => {
       postDoc.likes = filteredLikes;
       await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
       setIsLiked(false);
-      likesCount == 1 ? setLikesCount(null) : setLikesCount(likesCount - 1);
+      likesCount === 1 ? setLikesCount(null) : setLikesCount(likesCount - 1);
     } else {
       let postDoc = props.postObj;
       postDoc.likes.push(currentUser.uid);
       await firebaseDB.collection("posts").doc(postDoc.pid).set(postDoc);
       setIsLiked(true);
-      likesCount == null ? setLikesCount(1) : setLikesCount(likesCount + 1);
+      likesCount === null ? setLikesCount(1) : setLikesCount(likesCount + 1);
     }
   };
 
-  useEffect(async () => {
+  useEffect(()=>{
+    (async () => {
     console.log(props);
     let uid = props.postObj.uid;
     let doc = await firebaseDB.collection("users").doc(uid).get();
@@ -119,7 +120,7 @@ const VideoPost = (props) => {
         profilePic: commentUserPic,
         username: commentUserName,
         comment: commentObj.comment,
-      });
+    });
     }
 
     if (likes.includes(currentUser.uid)) {
@@ -132,20 +133,21 @@ const VideoPost = (props) => {
     }
     setUser(user);
     setCommentList(updatedCommentList);
-  }, []); //comp did Mount
+  })();
+}, [currentUser,props]); //comp did Mount
 
   return (
     <Container className={classes.post}>
       <Card
         className="video-card"
       >
-        <img
+        <img alt=""
           className={classes.avatar}
           src={user ? user.profileImageUrl : ""}
         />
-        <Typography variant="span">
+        
           <strong>{user ? user.username : ""}</strong>
-        </Typography>
+      
         <div className="video-container">
           <video 
             muted={muteSound}
@@ -199,10 +201,10 @@ const VideoPost = (props) => {
 
         {likesCount && (
           <div style={{ marginBottom: "5px" }}>
-            <Typography variant="p">Liked by {likesCount} others </Typography>
+            <Typography variant="body1">Liked by {likesCount} others </Typography>
           </div>
         )}
-          <Typography  variant="p">Add Comment: </Typography>
+          Add Comment:
           <TextField
             style={{margin:'0 0.5rem'}}
             variant="outlined"
@@ -225,10 +227,10 @@ const VideoPost = (props) => {
             {commentList.map((commentObj) => {
               return (
                 <div className="comment">
-                  <img className={classes.avatar} src={commentObj.profilePic} />
+                  <img className={classes.avatar} src={commentObj.profilePic} alt=""/>
                   <strong>{commentObj.username}</strong>
                   <br />
-                  <Typography variant="p">{commentObj.comment} </Typography>
+                  <Typography variant="body2">{commentObj.comment} </Typography>
                 </div>
               );
             })}

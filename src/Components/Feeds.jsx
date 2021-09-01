@@ -62,19 +62,14 @@ const Feeds = (props) => {
     } catch (err) {}
   };
 
-  let conditionObject = {
-    root: null, //observe from whole page
-    threshold: "0.8", //80%
-  };
 
   function cb(entries) {
     entries.forEach((entry) => {
       let child = entry.target.children[0];
-      // play(); => async
-      // pause(); => sync
+   
 
       child.play().then(function () {
-        if (entry.isIntersecting == false) {
+        if (entry.isIntersecting === false) {
           child.pause();
         }
       });
@@ -82,6 +77,10 @@ const Feeds = (props) => {
   }
 
   useEffect(() => {
+    let conditionObject = {
+      root: null, //observe from whole page
+      threshold: "0.8", //80%
+    };
     // code which will run when the component loads
     let observerObject = new IntersectionObserver(cb, conditionObject);
     let elements = document.querySelectorAll(".video-container");

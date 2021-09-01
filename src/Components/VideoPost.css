@@ -23,7 +23,7 @@
   width: 100%;
 }
 .video-card {
-  height: 85vh;
+  height: 100vh;
   width: 33vw;
   margin: auto;
 
@@ -31,7 +31,7 @@
   padding: 1rem;
 }
 .comment-list {
-  height: 81%;
+  height: 82%;
   width: 100%;
   background-color: white;
   position: absolute;
