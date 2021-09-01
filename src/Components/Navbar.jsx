@@ -4,16 +4,15 @@ import { AuthContext } from "../AuthProvider";
 import logo from "../logo.png";
 import { Link } from "react-router-dom";
 
-import { firebaseDB, firebaseStorage, timeStamp } from "../config/firebase";
+import { firebaseDB } from "../config/firebase";
 import {
   CardMedia,
   Button,
   IconButton,
   makeStyles,
-  Avatar,
 } from "@material-ui/core";
-import { HomeRounded, AccountCircle, ExitToApp } from "@material-ui/icons";
-import CommentIcon from "@material-ui/icons/Comment";
+import { HomeRounded, CommentIcon ,ExitToApp } from "@material-ui/icons";
+
 
 const Navbar = (props) => {
   let [profilePic, setProfilePic] = useState(null);
@@ -55,7 +54,6 @@ const Navbar = (props) => {
     let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
     let user = doc.data();
     profilePic = user.profileImageUrl;
-    console.log(profilePic);
   }, []);
   let classes = useStyles();
   return (

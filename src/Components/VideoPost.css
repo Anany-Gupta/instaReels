@@ -3,12 +3,12 @@
   width: 30px;
   border: 1px solid black;
   border-radius: 50%;
-  margin-right: .5rem;
+  margin-right: 0.5rem;
 }
 .comment {
   /* border: 1px grey solid;
     border-radius: 15px; */
-  padding: .5rem;
+  padding: 0.5rem;
 }
 .tools > * {
   margin: 1rem;
@@ -22,14 +22,18 @@
   height: 76%;
   width: 100%;
 }
-.video-card{
-    position:relative
-}
-.comment-list{
-    height: 81%;
-    width: 100%;
-    background-color: white;
-    position:absolute;
-    top:0;
+.video-card {
+  height: 85vh;
+  width: 33vw;
+  margin: auto;
 
+  position: relative;
+  padding: 1rem;
+}
+.comment-list {
+  height: 81%;
+  width: 100%;
+  background-color: white;
+  position: absolute;
+  top: 0;
 }

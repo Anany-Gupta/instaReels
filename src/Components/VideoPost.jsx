@@ -28,19 +28,20 @@ const VideoPost = (props) => {
   let [likesCount, setLikesCount] = useState(null);
   let [isLiked, setIsLiked] = useState(false);
   let { currentUser } = useContext(AuthContext);
-  let [pause, setPause] = useState(false);
+  let [pause, setPause] = useState(props.pause);
   // let [muteSound, setMuteSound] = useState(false);
  
 
   const useStyles = makeStyles({
     videoContainerSize: {
-      height: "50vw%",
+      height: "60vw",
     },
     post: {
       width: "45vw",
-      padding: "1rem",
+      padding: "2rem",
     },
     avatar: {
+      margin:'.5rem',
       height: "30px",
       width: "30px",
       border: "1px solid black",
@@ -129,8 +130,6 @@ const VideoPost = (props) => {
         setLikesCount(likes.length);
       }
     }
-
-    console.log(updatedCommentList);
     setUser(user);
     setCommentList(updatedCommentList);
   }, []); //comp did Mount
@@ -139,7 +138,6 @@ const VideoPost = (props) => {
     <Container className={classes.post}>
       <Card
         className="video-card"
-        style={{ height: "80vh", width: "30vw", margin: "auto" }}
       >
         <img
           className={classes.avatar}
@@ -153,7 +151,7 @@ const VideoPost = (props) => {
             muted={muteSound}
             style={{ height: "100%", width: "100%", objectFit: "contain" }}
             className={classes.videoContainerSize}
-            autoPlay
+            {...props.pause?"":'autoplay'}
             loop
            
             onClick={(e) => {
@@ -204,9 +202,9 @@ const VideoPost = (props) => {
             <Typography variant="p">Liked by {likesCount} others </Typography>
           </div>
         )}
-        <div className={hide ? "comments-div hide" : " comments-div "}>
-          <Typography variant="p">Comments</Typography>
+          <Typography  variant="p">Add Comment: </Typography>
           <TextField
+            style={{margin:'0 0.5rem'}}
             variant="outlined"
             label="Add a comment"
             size="small"
@@ -222,6 +220,7 @@ const VideoPost = (props) => {
           >
             Post
           </Button>
+        <div className={hide ? "comments-div hide" : " comments-div "}>
           <div className="comment-list">
             {commentList.map((commentObj) => {
               return (

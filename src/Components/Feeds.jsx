@@ -41,7 +41,7 @@ const Feeds = (props) => {
       // it indicates success of the upload !!
       async function resultFunction() {
         let videoUrl = await uploadVideoObject.snapshot.ref.getDownloadURL();
-        console.log(videoUrl);
+        
         let pid = uuid(); // unique id
         await firebaseDB.collection("posts").doc(pid).set({
           pid: pid,
@@ -68,7 +68,6 @@ const Feeds = (props) => {
   };
 
   function cb(entries) {
-    console.log(entries);
     entries.forEach((entry) => {
       let child = entry.target.children[0];
       // play(); => async
@@ -108,9 +107,9 @@ const Feeds = (props) => {
   }, []); //component did mount !!
 
   return (
-    <div style={{position:"relative"}}>
+    <div style={{position:"relative",background:'#ecf0f1'}}>
       
-      <div style={{position:'fixed',top:'10%',right:'1rem',display:'flex',flexDirection:'column'}}>
+      <div style={{position:'fixed',top:'15vh',right:'1rem',display:'flex',flexDirection:'column'}}>
         <div style={{display:'flex',flexDirection:'column'}}>
           <input type="file" onChange={handleInputFile} />
           <label>
@@ -127,8 +126,10 @@ const Feeds = (props) => {
         <p>{uploadVideoError}</p>
       </div>
       <div className="feeds-video-list" style={{ margin: "auto" }}>
-        {posts.map((postObj) => {
-          return <VideoPost key={postObj.pid} postObj={postObj}></VideoPost>;
+        {/* {console.log(posts)} */}
+        {
+        posts.map((postObj) => {
+          return <VideoPost key={postObj.pid} postObj={postObj} pause={false}></VideoPost>;
         })}
       </div>
     </div>
