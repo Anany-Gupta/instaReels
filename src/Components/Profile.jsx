@@ -7,35 +7,29 @@ const Profile = () => {
   let [posts, setPosts] = useState([]);
   let [profile, setProfile] = useState({});
   let { currentUser } = useContext(AuthContext);
-  useEffect(()=>{
-    (async () => {
+  useEffect(async () => {
     let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
     let user = doc.data();
     setProfile(user);
-    })();
-  }, [currentUser]);
+  }, []);
 
-  useEffect(()=>{
-
-      (async () => {
-          let unsub = firebaseDB
-          .collection("posts")
-          .orderBy("createdAt", "desc")
+  useEffect(async () => {
+    let unsub = firebaseDB
+      .collection("posts")
+      .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
         let allPosts = snapshot.docs.map((doc) => {
-            return doc.data();
-          
+          let obj = doc.data();
+          if ((obj.uid = currentUser.uid)) {
+            return obj;
+          }
         });
-        let FilteredPosts = allPosts.filter((element)=>{
-            return element.uid===currentUser.uid;
-        })
-        setPosts(FilteredPosts);
+        setPosts(allPosts);
       });
-      return () => {
-          unsub();
-        };
-    })();
-    }, [currentUser]);
+    return () => {
+      unsub();
+    };
+  }, []);
   let useStyles = makeStyles({
     profileBar: {
       fontFamily: 'Dancing Script, cursive',
@@ -62,7 +56,7 @@ const Profile = () => {
     <>
       <div className={classes.profileBar}>
         <div style={{padding:'0 10rem'}}>
-          <img className={classes.profileImg} src={profile.profileImageUrl} alt="Profile" />
+          <img className={classes.profileImg} src={profile.profileImageUrl} />
         </div>
         <div className="profile-details">
           <h1>{profile.username}</h1>
