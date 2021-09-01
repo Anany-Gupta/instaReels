@@ -110,8 +110,8 @@ const Feeds = (props) => {
   return (
     <div style={{position:"relative"}}>
       
-      <div style={{position:'fixed',top:'10rem',right:'1rem',display:'flex',flexDirection:'column'}}>
-        <div>
+      <div style={{position:'fixed',top:'10%',right:'1rem',display:'flex',flexDirection:'column'}}>
+        <div style={{display:'flex',flexDirection:'column'}}>
           <input type="file" onChange={handleInputFile} />
           <label>
             <Button

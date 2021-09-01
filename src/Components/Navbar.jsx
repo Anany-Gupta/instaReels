@@ -2,21 +2,28 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "../AuthProvider";
 import logo from "../logo.png";
+import { Link } from "react-router-dom";
 
 import { firebaseDB, firebaseStorage, timeStamp } from "../config/firebase";
-import { CardMedia, Button, IconButton, makeStyles } from "@material-ui/core";
 import {
-  HomeRounded,
-  AccountCircle,
-  ExitToApp,
-  PhotoCamera,
-} from "@material-ui/icons";
+  CardMedia,
+  Button,
+  IconButton,
+  makeStyles,
+  Avatar,
+} from "@material-ui/core";
+import { HomeRounded, AccountCircle, ExitToApp } from "@material-ui/icons";
 import CommentIcon from "@material-ui/icons/Comment";
 
 const Navbar = (props) => {
-  const { signOut,currentUser  } = useContext(AuthContext);
- 
-
+  let [profilePic, setProfilePic] = useState(null);
+  const { signOut, currentUser } = useContext(AuthContext);
+  let [user, setUser] = useState(currentUser);
+  useEffect(async () => {
+    let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
+    let user = doc.data();
+    setProfilePic(user.profileImageUrl);
+  }, []);
   const handleLogout = async () => {
     try {
       await signOut();
@@ -37,25 +44,40 @@ const Navbar = (props) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      position:'sticky',
+      position: "sticky",
     },
     tools: {
       width: "20%",
       fontSize: "1rem",
     },
   });
+  useEffect(async () => {
+    let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
+    let user = doc.data();
+    profilePic = user.profileImageUrl;
+    console.log(profilePic);
+  }, []);
   let classes = useStyles();
   return (
     <div className={classes.Nav}>
       <CardMedia className={classes.logo} image={logo}></CardMedia>
-      
+
       <div className={classes.tools}>
-        <IconButton>
-          <HomeRounded />
-        </IconButton>
-        <IconButton>
-          <AccountCircle />
-        </IconButton>
+        <Link to="/">
+          <IconButton>
+            <HomeRounded></HomeRounded>
+          </IconButton>
+        </Link>
+        <Link to="/profile">
+          <img
+            style={{
+              height: "30px",
+              width: "30px",
+              borderRadius: "50%",margin:'5px'
+            }}
+            src={profilePic}
+          />
+        </Link>
 
         <Button
           onClick={handleLogout}
@@ -65,7 +87,6 @@ const Navbar = (props) => {
         >
           Logout
         </Button>
-        
       </div>
     </div>
   );
