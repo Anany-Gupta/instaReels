@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import {
   BrowserRouter as Router,
   Redirect,
@@ -10,7 +10,7 @@ import Feeds from "./Components/Feeds";
 import Login from "./Components/Login";
 import Profile from "./Components/Profile";
 import Signup from "./Components/Signup";
-import { AuthContext, AuthProvider } from "./AuthProvider";
+import { AuthContext} from "./AuthProvider";
 
 let App=()=> {
   let { currentUser } = useContext(AuthContext);
@@ -39,17 +39,5 @@ let App=()=> {
   );
 }
 
-function PrivateRoute(props) {
-  let { comp: Component, path } = props;
-  // Feeds ?? loggedIn and path="/"
-  let { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
-  // let currentUser = true;
-  return currentUser ? (
-    <Route path={path} component={Component}></Route>
-  ) : (
-    <Redirect to="/login"></Redirect>
-  );
-}
 
 export default App;

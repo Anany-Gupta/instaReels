@@ -19,11 +19,11 @@
   margin-bottom: 0.5rem;
 }
 .video-container {
-  height: 76%;
+  height: 70%;
   width: 100%;
 }
 .video-card {
-  height: 85vh;
+  height: 88vh;
   width: 33vw;
   margin: auto;
 
@@ -31,7 +31,7 @@
   padding: 1rem;
 }
 .comment-list {
-  height: 81%;
+  height: 77%;
   width: 100%;
   background-color: white;
   position: absolute;

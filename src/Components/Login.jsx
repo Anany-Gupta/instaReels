@@ -15,7 +15,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-
+import Carousal from './carousal'
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,7 +40,7 @@ const Login = (props) => {
       justifyContent: "center",
       width: "100vw",
     },
-    carousal: { height: "30rem", backgroundColor: "lightgray" ,width:"20rem" },
+    carousal: { height: "31rem" ,width:"20.9rem" },
     loginTemplate: { height: "33rem" ,width:"30rem" },
     fullWidth: {
       width: "100%",
@@ -67,8 +67,8 @@ const Login = (props) => {
       <Container style={{height: '100vh',display:'flex' ,alignItems:'center' }}>
         <Grid container spacing={2} style={{justifyContent:"space-around",alignItems:"center" }}>
           {/* Carousel */}
-          <Grid item sm={5}>
-            <Paper className={classes.carousal}>Carousel</Paper>
+          <Grid className={classes.carousal} >
+          <Carousal/>
           </Grid>
           <Grid item className={classes.loginTemplate}>
             <Card variant="outlined" className={classes.mb}>

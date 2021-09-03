@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider";
-
+import Carousal from './carousal'
 import { firebaseDB, firebaseStorage } from "../config/firebase";
 import { Link } from "react-router-dom";
 import logo from "../logo.png";
@@ -23,7 +23,6 @@ const Signup = (props) => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [message, setMessage] = useState("");
   const { signUp } = useContext(AuthContext);
 
   const handleFileSubmit = (event) => {
@@ -35,7 +34,6 @@ const Signup = (props) => {
     try {
       let response = await signUp(email, password);
       let uid = response.user.uid;
-
       const uploadPhotoObject = firebaseStorage
         .ref(`/profilePhotos/${uid}/image.jpg`)
         .put(profileImage);
@@ -48,7 +46,7 @@ const Signup = (props) => {
         async () => {
           let profileImageUrl =
             await uploadPhotoObject.snapshot.ref.getDownloadURL();
-          firebaseDB.collection("users").doc(uid).set({
+          await firebaseDB.collection("users").doc(uid).set({
             email: email,
             userId: uid,
             username: username,
@@ -59,7 +57,9 @@ const Signup = (props) => {
         }
       );
     } catch (err) {
-      setMessage(err.message);
+      console.log(err.message);
+      setUsername("");
+      setProfileImage(null);
       setEmail("");
       setPassword("");
     }
@@ -71,8 +71,8 @@ const Signup = (props) => {
       justifyContent: "center",
       width: "100vw",
     },
-    carousal: { height: "30rem", backgroundColor: "lightgray", width: "20rem" },
-    signinTemplate: { height: "33rem", width: "30rem" },
+    carousal: { height: "31rem", width: "20.9rem" },
+    signinTemplate: { height: "34rem", width: "29 rem" },
     fullWidth: {
       width: "100%",
     },
@@ -98,17 +98,15 @@ const Signup = (props) => {
 
   return (
     <div>
-      <Container
-        style={{ height: "100vh", display: "flex", alignItems: "center" }}
-      >
+      <Container style={{ height: "100vh", display: "flex", alignItems: "center" }}>
         <Grid
           container
           spacing={5}
           style={{ justifyContent: "space-around", alignItems: "center" }}
         >
-          {/* Carousel */}
-          <Grid item sm={5}>
-            <Paper className={classes.carousal}>Carousel</Paper>
+         
+          <Grid className={classes.carousal}>
+            <Carousal/>
           </Grid>
           <Grid item className={classes.signinTemplate}>
             <Card variant="outlined" className={classes.mb}>

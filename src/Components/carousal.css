@@ -1,0 +1,25 @@
+.img-div{
+    height: 100%;
+    width: 100%;
+}
+img{
+    height: 100%;
+    width: 100%;
+    animation: imgAnimate 5600ms linear infinite;
+
+}
+@keyframes imgAnimate {
+    0%{opacity: 1;}
+    10%{opacity: 1;}
+    20%{opacity: 1;}
+    30%{opacity: 1;}
+    40%{opacity: 1;}
+    50%{opacity: 1;}
+    60%{opacity: 1;}
+    70%{opacity: 1;}
+    80%{opacity: .9;}
+    90%{opacity: .8;}
+    100%{opacity: .7;}
+
+    
+}

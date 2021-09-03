@@ -8,28 +8,29 @@ const Profile = () => {
   let [profile, setProfile] = useState({});
   let { currentUser } = useContext(AuthContext);
   useEffect(async () => {
-    let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
+    let doc = await  firebaseDB.collection("users").doc(currentUser.uid).get();
     let user = doc.data();
     setProfile(user);
-  }, []);
+  }, [currentUser]);
 
-  useEffect(async () => {
+  useEffect( () => {
     let unsub = firebaseDB
       .collection("posts")
       .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
         let allPosts = snapshot.docs.map((doc) => {
-          let obj = doc.data();
-          if ((obj.uid = currentUser.uid)) {
-            return obj;
+            return doc.data();
           }
-        });
-        setPosts(allPosts);
+        );
+        let filteredPosts = allPosts.filter((element)=>{
+          return element.uid===currentUser.uid;
+        })
+        setPosts(filteredPosts);
       });
     return () => {
       unsub();
     };
-  }, []);
+  }, [currentUser]);
   let useStyles = makeStyles({
     profileBar: {
       fontFamily: 'Dancing Script, cursive',

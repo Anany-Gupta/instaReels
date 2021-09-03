@@ -15,6 +15,7 @@ export function AuthProvider({ children }) {
 
   function signUp(email, password) {
     return firebaseAuth.createUserWithEmailAndPassword(email, password);
+   
   }
 
   useEffect(() => {
@@ -24,13 +25,15 @@ export function AuthProvider({ children }) {
     return ()=>{
       unsub();
     }
-  }, []);
+  }, [currentUser]);
 
   let value = {
     currentUser: currentUser,
     signOut: signOut,
     login: login,
     signUp: signUp,
+    setCurrentUser: setCurrentUser,
+
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

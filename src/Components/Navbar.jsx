@@ -11,18 +11,13 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
-import { HomeRounded, CommentIcon ,ExitToApp } from "@material-ui/icons";
+import { HomeRounded ,AccountCircle, ExitToApp } from "@material-ui/icons";
 
 
 const Navbar = (props) => {
-  let [profilePic, setProfilePic] = useState(null);
-  const { signOut, currentUser } = useContext(AuthContext);
-  let [user, setUser] = useState(currentUser);
-  useEffect(async () => {
-    let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
-    let user = doc.data();
-    setProfilePic(user.profileImageUrl);
-  }, []);
+  const { signOut } = useContext(AuthContext);
+  
+  
   const handleLogout = async () => {
     try {
       await signOut();
@@ -43,18 +38,18 @@ const Navbar = (props) => {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      position: "sticky",
+      
     },
     tools: {
       width: "20%",
       fontSize: "1rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-around",
+      
     },
   });
-  useEffect(async () => {
-    let doc = await firebaseDB.collection("users").doc(currentUser.uid).get();
-    let user = doc.data();
-    profilePic = user.profileImageUrl;
-  }, []);
+ 
   let classes = useStyles();
   return (
     <div className={classes.Nav}>
@@ -67,14 +62,9 @@ const Navbar = (props) => {
           </IconButton>
         </Link>
         <Link to="/profile">
-          <img
-            style={{
-              height: "30px",
-              width: "30px",
-              borderRadius: "50%",margin:'5px'
-            }}
-            src={profilePic}
-          />
+          <IconButton>
+         <AccountCircle/>
+          </IconButton>
         </Link>
 
         <Button
