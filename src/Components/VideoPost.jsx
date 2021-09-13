@@ -203,3 +203,42 @@ const VideoPost = (props) => {
           <div style={{ marginBottom: "5px" }}>
             <Typography variant="body1">Liked by {likesCount} others </Typography>
           </div>
+        )}
+         Add Comment: 
+          <TextField
+            style={{margin:'0 0.5rem'}}
+            variant="outlined"
+            label="Add a comment"
+            size="small"
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+          />
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={addCommentToCommentList}
+          >
+            Post
+          </Button>
+        <div className={hide ? "comments-div hide" : " comments-div "}>
+          <div className="comment-list">
+            {commentList.map((commentObj) => {
+              return (
+                <div className="comment">
+                  <img className={classes.avatar} alt=""src={commentObj.profilePic} />
+                  <strong>{commentObj.username}</strong>
+                  <br />
+                  <Typography variant="body2">{commentObj.comment} </Typography>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Card>
+    </Container>
+  );
+};
+
+export default VideoPost;
