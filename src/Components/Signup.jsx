@@ -4,6 +4,7 @@ import Carousal from './carousal'
 import { firebaseDB, firebaseStorage } from "../config/firebase";
 import { Link } from "react-router-dom";
 import logo from "../logo.png";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import {
   TextField,
   Grid,
@@ -17,12 +18,12 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-
 const Signup = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const [seePassword,setSeePassword] = useState(false);
   const { signUp } = useContext(AuthContext);
 
   const handleFileSubmit = (event) => {
@@ -133,15 +134,40 @@ const Signup = (props) => {
                   onChange={(e) => setEmail(e.target.value)}
                   className={classes.mb}
                 ></TextField>
-                <TextField
-                  label="Password"
-                  type="password"
+                <Card
                   variant="outlined"
-                  value={password}
                   size="small"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={classes.mb}
-                ></TextField>
+                  style={{
+                   
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <TextField
+                    style={{ width: "85%", height: "80%" }}
+                    label="Password"
+                    variant ="standard"
+                    size="small"
+                    type={seePassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={classes.mb}
+                  ></TextField>
+                  {seePassword ? (
+                    <Visibility
+                      onClick={() => {
+                        setSeePassword(!seePassword);
+                      }}
+                    />
+                  ) : (
+                    <VisibilityOff
+                      onClick={() => {
+                        setSeePassword(!seePassword);
+                      }}
+                    />
+                  )}
+                </Card>
                 <input
                   type="file"
                   accept="image/*"

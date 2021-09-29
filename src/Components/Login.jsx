@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider";
 import { Link } from "react-router-dom";
 import logo from "../logo.png";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 import {
   TextField,
   Grid,
@@ -15,11 +16,12 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import Carousal from './carousal'
+import Carousal from "./carousal";
 const Login = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [seePassword, setSeePassword] = useState(false);
   let { login } = useContext(AuthContext);
 
   const handleLogin = async (e) => {
@@ -40,8 +42,8 @@ const Login = (props) => {
       justifyContent: "center",
       width: "100vw",
     },
-    carousal: { height: "31rem" ,width:"20.9rem" },
-    loginTemplate: { height: "33rem" ,width:"30rem" },
+    carousal: { height: "31rem", width: "20.9rem" },
+    loginTemplate: { height: "33rem", width: "30rem" },
     fullWidth: {
       width: "100%",
     },
@@ -64,11 +66,17 @@ const Login = (props) => {
 
   return (
     <div>
-      <Container style={{height: '100vh',display:'flex' ,alignItems:'center' }}>
-        <Grid container spacing={2} style={{justifyContent:"space-around",alignItems:"center" }}>
+      <Container
+        style={{ height: "100vh", display: "flex", alignItems: "center" }}
+      >
+        <Grid
+          container
+          spacing={2}
+          style={{ justifyContent: "space-around", alignItems: "center" }}
+        >
           {/* Carousel */}
-          <Grid className={classes.carousal} >
-          <Carousal/>
+          <Grid className={classes.carousal}>
+            <Carousal />
           </Grid>
           <Grid item className={classes.loginTemplate}>
             <Card variant="outlined" className={classes.mb}>
@@ -84,17 +92,41 @@ const Login = (props) => {
                   value={email}
                   size="small"
                   onChange={(e) => setEmail(e.target.value)}
-                  className = {classes.mb}
+                  className={classes.mb}
                 ></TextField>
-                <TextField
-                  label="Password"
-                  type="password"
+                <Card
                   variant="outlined"
-                  value={password}
-                  size="small"
-                  onChange={(e) => setPassword(e.target.value)}
-                  className = {classes.mb}
-                ></TextField>
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <TextField
+                    style={{ width: "85%", height: "80%" }}
+                    label="Password"
+                    variant ="standard"
+                    size="small"
+                    type={seePassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={classes.mb}
+                  ></TextField>
+                  {seePassword ? (
+                    <Visibility
+                      onClick={() => {
+                        setSeePassword(!seePassword);
+                      }}
+                    />
+                  ) : (
+                    <VisibilityOff
+                      onClick={() => {
+                        setSeePassword(!seePassword);
+                      }}
+                    />
+                  )}
+                </Card>
               </CardContent>
               <CardActions>
                 <Button
@@ -109,16 +141,15 @@ const Login = (props) => {
             </Card>
             <Card variant="outlined" className={classes.padding}>
               <Typography style={{ textAlign: "center" }}>
-                Don't have an account?  <></>     
-                  <Link style={{ textDecoration: "none" }} to="/signup">
-                   SignUp
-                  </Link>
-               </Typography>
+                Don't have an account? <></>
+                <Link style={{ textDecoration: "none" }} to="/signup">
+                  SignUp
+                </Link>
+              </Typography>
             </Card>
           </Grid>
         </Grid>
       </Container>
-     
     </div>
   );
 };
